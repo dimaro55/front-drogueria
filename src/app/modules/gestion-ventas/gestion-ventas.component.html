@@ -1,0 +1,85 @@
+<div class="col-12">
+    <form class="col-12 flex align-item-center" [formGroup]="filterVentaForm">
+        <div class="col-12 flex ">
+            
+            <div class="card flex justify-content-center col-8" >
+                <label for="nameFiltro" class="mt-2 col-2">Fecha Inicio/ Fecha Fin</label>
+                <p-calendar 
+                   formControlName="dates"
+                    [showIcon]="true" 
+                    selectionMode="range" 
+                    [readonlyInput]="true" class="col-8"/>
+            </div>
+            
+
+            <div class="col-2 flex justify-content-end gap-2 px-1">
+                <p-button label="Limpiar" (onClick)="limpiar()"></p-button>
+                <p-button label="Filtrar" (onClick)="filterDates()"></p-button>
+            </div>
+
+            <div class="col-2 flex justify-content-end gap-2 px-1">
+                <p-button label="RealizarVenta" (onClick)="showModal()"></p-button>
+               
+            </div>
+        </div>
+        
+    </form>
+
+
+    <div class="col-12">
+        <p-table [value]="ventas" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate=" {first} - {last} de {totalRecords} "
+            [rowsPerPageOptions]="[10, 25, 50]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="col">Fecha Hora</th>
+                    <th class="col">Medicamento ID</th>
+                    <th class="col">Cantidad</th>
+                    <th class="col">Valor</th>
+                    <th class="col">Total</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-venta>
+                <tr>
+                    <td>{{ venta.sellDate }}</td>
+                    <td>{{ venta.medicineID }}</td>
+                    <td>{{ venta.amount }}</td>
+                    <td>{{ venta.value | currency: "CAD":"symbol-narrow":".0-0"}}</td>
+                    <td>{{ venta.total | currency: "CAD":"symbol-narrow":".0-0"}}</td>
+                    
+                    
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+
+<p-toast />
+<p-confirmDialog />
+
+<p-dialog header="Nueva Venta" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem' }">
+    <div class="col-12">
+      <form [formGroup]="ventaForm" class="col-12">
+        <div class="col-12">
+          <label for="producto">Producto</label>
+          <p-dropdown formControlName="producto" [options]="medicamentos" optionLabel="name" placeholder="Seleccione"
+            styleClass="col-12" appendTo="body" (onChange)="changeProducto($event)" />
+        </div>
+        <div class="col-12 mt-2">
+          <label for="producto">Cantidad Actual</label>
+          <input type="text" pInputText formControlName="cantidadActual" class="col-12" />
+        </div>
+        <div class="col-12 mt-2">
+          <label for="producto">Cantidad Venta</label>
+          <input type="text" pInputText formControlName="cantidadVenta" class="col-12" />
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-4">
+          <button pButton pRipple label="Vender" class="p-button-success" [ngClass]="{'opacity-60': ventaForm.invalid }" (click)="guardarVenta()">
+          </button>
+        </div>
+      </form>
+    </div>
+  </p-dialog>
+
+

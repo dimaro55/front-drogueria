@@ -1,0 +1,93 @@
+<div class="col-12">
+    <form class="col-12 flex align-item-center" [formGroup]="filterForm">
+        <div class="col-6 flex ">
+            <div class="col-9 flex align-item-center gap-2 px-1">
+                <label for="nameFiltro" class="mt-2 col-2">Nombre</label>
+                <input type="text" pInputText class="col-10" formControlName="name" id="nameFiltro" />
+            </div>
+
+            <div class="col-3 flex justify-content-end gap-2 px-1">
+                <p-button label="Limpiar" (onClick)="filterForm.reset()"></p-button>
+                <p-button label="Filtrar" (onClick)="filter()"></p-button>
+            </div>
+        </div>
+        <div class="col-6 flex justify-content-end ">
+            <p-button label="Nuevo" styleClass="p-button-success" (onClick)="showModal()"></p-button>
+        </div>
+    </form>
+
+
+    <div class="col-12">
+        <p-table [value]="medicamentos" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate=" {first} - {last} de {totalRecords} "
+            [rowsPerPageOptions]="[10, 25, 50]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="col">Nombre</th>
+                    <th class="col">Laboratorio</th>
+                    <th class="col">Fecha Producción</th>
+                    <th class="col">Fecha Vencimiento</th>
+                    <th class="col">Cantidad</th>
+                    <th class="col">Valor</th>
+                    <th class="col">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-medicina>
+                <tr>
+                    <td>{{ medicina.name }}</td>
+                    <td>{{ medicina.laboratory }}</td>
+                    <td>{{ medicina.production_date }}</td>
+                    <td>{{ medicina.expiration_date }}</td>
+                    <td>{{ medicina.stock }}</td>
+                    <td>{{ medicina.value | currency: "CAD":"symbol-narrow":".0-0"}}</td>
+                    <td>
+                        <div class="flex align-item-center gap-3">
+                            <i class="pi pi-pencil cursor-pointer"  (click)="edit(medicina.id)"></i>
+                            <i class="pi pi-trash cursor-pointer" (click)="delete(medicina.id)"></i>
+                        </div>
+                    
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<div class="col-12">
+    <p-dialog header="Header" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
+        [resizable]="false">
+        <form class="col-12" [formGroup]="medicamentoForm">
+            <div class="col-12">
+                <label for="nombre">Nombre</label>
+                <input type="text" pInputText class="col-12" id="nombre" formControlName="name" />
+            </div>
+            <div class="col-12">
+                <label for="laboratorio">Laboratorio</label>
+                <input type="text" pInputText class="col-12" id="laboratorio" formControlName="laboratory" />
+            </div>
+            <div class="col-12">
+                <label for="fecha_produccion">Fecha Producción</label>
+                <p-calendar [showIcon]="true" id="fecha_produccion" styleClass="col-12  p-0 " appendTo="body" formControlName="production_date"></p-calendar>  
+            </div>
+            <div class="col-12">
+                <label for="fecha_vencimiento">Fecha Vencimiento</label>
+                <p-calendar [showIcon]="true" id="fecha_vencimiento" styleClass="col-12 p-0" appendTo="body" formControlName="expiration_date"></p-calendar> 
+            </div>
+            <div class="col-12">
+                <label for="cantidad">Cantidad</label>
+                <input type="number" pInputText class="col-12" id="cantidad" formControlName="stock"/>
+            </div>
+            <div class="col-12">
+                <label for="valor">Valor</label>
+                <input type="number" pInputText class="col-12" id="valor" formControlName="value"/>
+            </div>
+            <div class="flex justify-content-center">
+                <p-button label="Confirmar" class="justify-content-center col-12"  [ngClass]="{'opacity-60': medicamentoForm.invalid}" (onClick)="botonForm()"></p-button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+
+<p-toast />
+<p-confirmDialog />
